@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>بيت المسلم</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%236b8a6e'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3Eب%3C/text%3E%3C/svg%3E"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-brand" style="display:flex;align-items:center;gap:12px">
+      <div style="flex:1">
+        <h1 class="brand-title">بيت المسلم</h1>
+        <p class="brand-sub" id="headerSub">سبحان الله وبحمده</p>
+      </div>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="الوضع الليلي">🌙</button>
+    </div>
+    <nav class="tab-nav" id="tabNav">
+      <button class="tab-btn active" data-tab="tasbeeh">السبحة</button>
+      <button class="tab-btn" data-tab="quran">القرآن</button>
+      <button class="tab-btn" data-tab="rare">تلاوات نادرة</button>
+      <button class="tab-btn" data-tab="adhkar">الأدعية</button>
+      <button class="tab-btn" data-tab="prayer">المواقيت</button>
+      <button class="tab-btn" data-tab="ai">مساعدك الذكي</button>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="app-main">
+
+    <!-- ══ TASBEEH TAB ══ -->
+    <div class="tab-content active" id="tab-tasbeeh">
+      <div class="section-hero">
+        <h2 class="section-title">السبحة الإلكترونية</h2>
+        <p class="section-sub">اذكر الله واطمئن قلبك</p>
+      </div>
+
+      <div class="card count-card">
+        <div class="count-number" id="tasbeehCount">0</div>
+        <div class="count-label">تسبيحة</div>
+        <div class="count-goal">الهدف: <span id="goalDisplay">50</span></div>
+        <div class="count-progress-bar"><div class="count-progress-fill" id="countProgressFill"></div></div>
+      </div>
+
+      <div class="circle-btn-wrap">
+        <button class="circle-tap-btn" id="circleTapBtn" onclick="doTasbeeh()">
+          <span class="circle-dhikr-text" id="circleDhikrText">سبحان الله</span>
+        </button>
+      </div>
+
+      <div class="dhikr-selector-row">
+        <button class="icon-btn" onclick="resetTasbeeh()" title="إعادة ضبط">↺</button>
+        <div class="dhikr-selector-wrap">
+          <select class="dhikr-inline-select" id="dhikrInlineSelect" onchange="changeDhikr(this.value)">
+            <option value="سبحان الله">سبحان الله</option>
+            <option value="الحمد لله">الحمد لله</option>
+            <option value="الله أكبر">الله أكبر</option>
+            <option value="لا إله إلا الله">لا إله إلا الله</option>
+            <option value="استغفر الله">استغفر الله</option>
+            <option value="لا حول ولا قوة إلا بالله">لا حول ولا قوة إلا بالله</option>
+            <option value="سبحان الله وبحمده">سبحان الله وبحمده</option>
+            <option value="سبحان الله العظيم">سبحان الله العظيم</option>
+          </select>
+        </div>
+        <button class="icon-btn sound-toggle" id="soundToggleBtn" onclick="toggleSound()" title="صوت التسبيح">🔔</button>
+        <button class="icon-btn" onclick="changeGoal()" title="تغيير الهدف">⚙</button>
+      </div>
+
+      <div class="card total-card">
+        <div class="total-number" id="totalToday">0</div>
+        <div class="total-label">إجمالي اليوم</div>
+      </div>
+
+      <div class="bottom-quote">
+        <p>﴿ أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ ﴾</p>
+      </div>
+    </div>
+
+    <!-- ══ QURAN TAB ══ -->
+    <div class="tab-content" id="tab-quran">
+      <div class="section-hero">
+        <h2 class="section-title">القرآن الكريم</h2>
+        <p class="section-sub">اقرأ وتدبر كتاب الله</p>
+      </div>
+
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="surahSearch" placeholder="ابحث عن سورة..." oninput="filterSurahs(this.value)"/>
+      </div>
+
+      <div class="surah-list" id="surahList"></div>
+    </div>
+
+    <!-- ══ RARE RECITATIONS TAB ══ -->
+    <div class="tab-content" id="tab-rare">
+      <div class="section-hero">
+        <h2 class="section-title">تلاوات نادرة</h2>
+        <p class="section-sub">استمع إلى تلاوات مختارة بصوت عذب</p>
+      </div>
+      <div class="rare-list" id="rareRecitationsList"></div>
+    </div>
+
+    <!-- ══ ADHKAR TAB ══ -->
+    <div class="tab-content" id="tab-adhkar">
+      <div class="section-hero">
+        <h2 class="section-title">الأدعية والأذكار</h2>
+        <p class="section-sub">حصن نفسك بذكر الله</p>
+      </div>
+      <div class="adhkar-cat-row">
+        <button class="cat-btn active" data-cat="morning" onclick="switchAdhkarCat('morning',this)">الصباح</button>
+        <button class="cat-btn" data-cat="evening" onclick="switchAdhkarCat('evening',this)">المساء</button>
+        <button class="cat-btn" data-cat="sleep" onclick="switchAdhkarCat('sleep',this)">النوم</button>
+        <button class="cat-btn" data-cat="prayer" onclick="switchAdhkarCat('prayer',this)">بعد الصلاة</button>
+      </div>
+      <div id="adhkarList" class="adhkar-list"></div>
+    </div>
+
+    <!-- ══ PRAYER TIMES TAB ══ -->
+    <div class="tab-content" id="tab-prayer">
+      <div class="section-hero">
+        <h2 class="section-title">مواقيت الصلاة</h2>
+        <p class="section-sub">حافظ على صلاتك في وقتها</p>
+      </div>
+      <div class="location-pill" id="locationPill">
+        <span>📍</span>
+        <span id="locationName">مواقيت الصلاة</span>
+      </div>
+      <div class="next-prayer-card">
+        <div class="np-label">الصلاة القادمة</div>
+        <div class="np-name" id="npName">--</div>
+        <div class="np-timer" id="npTimer">--:--:--</div>
+        <div class="np-sub">متبقي على الأذان</div>
+      </div>
+      <div class="prayers-grid" id="prayersGrid"></div>
+      <div class="hijri-date card" id="hijriDate"></div>
+    </div>
+
+    <!-- ══ AI ASSISTANT TAB ══ -->
+    <div class="tab-content" id="tab-ai">
+      <div class="section-hero">
+        <h2 class="section-title">مساعدك الذكي</h2>
+        <p class="section-sub">اسألني في أي موضوع إسلامي</p>
+      </div>
+
+      <div class="chat-container" id="chatContainer">
+        <!-- messages rendered by JS -->
+      </div>
+
+      <div class="chat-input-wrap">
+        <button class="chat-send-btn" onclick="sendAiMessage()" title="إرسال">➤</button>
+        <input type="text" class="chat-input" id="chatInput"
+               placeholder="اكتب سؤالك هنا..."
+               onkeydown="if(event.key==='Enter')sendAiMessage()"/>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>بيت المسلم © 2026</p>
+  </footer>
+
+  <!-- ══ QURAN READER PANEL ══ -->
+  <div class="reader-panel" id="readerPanel">
+    <div class="reader-header">
+      <button class="reader-back" onclick="closeReader()">→ رجوع</button>
+      <div class="reader-title" id="readerTitle">--</div>
+      <button class="reader-audio-btn" id="readerAudioBtn" onclick="toggleReaderAudio()">▶ استمع</button>
+    </div>
+    <div class="reciter-picker-wrap">
+      <div class="reciter-picker" id="reciterPicker"></div>
+    </div>
+    <div class="reader-body" id="readerBody">
+      <div class="reader-loading" id="readerLoading">
+        <div class="loader-ring"></div>
+        <p>جارٍ تحميل السورة...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ AUDIO PLAYER (sticky) ══ -->
+  <div class="audio-player" id="audioPlayer">
+    <div class="ap-top">
+      <div class="ap-info">
+        <div class="ap-surah" id="apSurahName">--</div>
+        <div class="ap-sheikh" id="apSheikh">الشيخ المنشاوي</div>
+      </div>
+      <div class="ap-center">
+        <button class="ap-btn ap-prev" onclick="playPrevSurah()" title="السابقة">⏮</button>
+        <button class="ap-btn ap-play" id="apPlayBtn" onclick="togglePlay()">▶</button>
+        <button class="ap-btn ap-next" onclick="playNextSurah()" title="التالية">⏭</button>
+      </div>
+      <div class="ap-right">
+        <div class="ap-loading" id="apLoading">⏳</div>
+        <button class="ap-close" onclick="closePlayer()" title="إغلاق">✕</button>
+      </div>
+    </div>
+    <div class="ap-progress-wrap">
+      <span class="ap-time" id="apCurrentTime">0:00</span>
+      <div class="ap-progress-bar" id="apProgressBar" onclick="seekAudio(event)">
+        <div class="ap-progress-fill" id="apProgressFill"></div>
+      </div>
+      <span class="ap-time" id="apDuration">0:00</span>
+    </div>
+  </div>
+
+  <audio id="quranAudio" preload="none"></audio>
+
+  <!-- Goal Modal -->
+  <div class="modal-overlay" id="goalModal" onclick="closeGoalModal(event)">
+    <div class="modal-box">
+      <h3>تغيير الهدف</h3>
+      <div class="goal-options">
+        <button onclick="setGoal(500)">500</button>
+        <button onclick="setGoal(400)">400</button>
+        <button onclick="setGoal(300)">300</button>
+        <button onclick="setGoal(200)">200</button>
+        <button onclick="setGoal(100)">100</button>
+        <button onclick="setGoal(50)">50</button>
+        <button onclick="setGoal(33)">33</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="script.js"></script>
+</body>
+</html>
